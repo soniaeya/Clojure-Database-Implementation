@@ -155,7 +155,7 @@
   )
 
 
-
+; Question 4
 (defn read_cust []
   (def string1 (
                  slurp "cust.txt")
@@ -272,8 +272,52 @@
     (do true))
   )
 
+;Question 5
+(defn sale_count [item]
 
-;
+  ;loop in prod_db idx 1
+  (loop [a 0]
+    (when (< a prod_count)
+      (def items_in_prod_db (get (get prod_db a) 1))
+
+      (if (= item items_in_prod_db)
+        (do
+          (def prod_id
+            (get (get prod_db a) 0)
+            )
+
+          ;loop over sales.txt idx 2
+          (def prod_bought 0)
+          (loop [y 0]
+            (when (< y sales_count)
+
+              (def prod_id_in_sales_db
+                (get (get sales_db y) 2)
+                )
+
+              (if (= prod_id_in_sales_db prod_id)
+                (do
+                  (def item_count (Integer/parseInt (get (get sales_db y) 3)))
+
+                  (def prod_bought (+ prod_bought item_count))
+                  )
+                )
+              (recur (+ 1 y))
+              )
+            ;sonia
+            )
+
+          )
+        )
+
+
+
+      (recur (+ a 1))
+      )
+    )
+
+
+  )
 
 (defn optionss []
     (do
@@ -301,18 +345,25 @@
               (print ": ")
               (print (format "%.2f" total))
               (println)
-
               ))
-
-          ;(search_cust cust_name)
-          ;(print cust_name)
-          ;(print ": ")
-          ;(print (format "%.2f" total))
-
           )
         )
       (if (= choice "5")
-        (do (println "5"))
+        (do
+          (println "Please enter an item: ")
+          (def item (read-line))
+          (if (sale_count item)
+            (do
+              (sale_count item)
+              (println item)
+              (print ": ")
+              (println prod_bought)
+
+              ))
+          (sale_count item)
+          (println prod_bought)
+            )
+
         )
       (if (= choice "6")
         (do
