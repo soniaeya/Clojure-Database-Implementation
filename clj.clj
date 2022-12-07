@@ -274,18 +274,18 @@
 
 ;Question 5
 (defn sale_count [item]
-
+  (def prod_exist false)
   ;loop in prod_db idx 1
   (loop [a 0]
     (when (< a prod_count)
       (def items_in_prod_db (get (get prod_db a) 1))
-
       (if (= item items_in_prod_db)
+
         (do
           (def prod_id
             (get (get prod_db a) 0)
             )
-
+          (def prod_exist true)
           ;loop over sales.txt idx 2
           (def prod_bought 0)
           (loop [y 0]
@@ -295,34 +295,36 @@
                 (get (get sales_db y) 2)
                 )
 
+
+              ;(println prod_id_in_sales_db)
+
               (if (= prod_id_in_sales_db prod_id)
                 (do
                   (def item_count (Integer/parseInt (get (get sales_db y) 3)))
 
+
+
                   (def prod_bought (+ prod_bought item_count))
+
+
+
                   )
                 )
               (recur (+ 1 y))
               )
-            ;sonia
             )
-
           )
         )
-
-
-
       (recur (+ a 1))
       )
     )
-
-
   )
 
 (defn optionss []
     (do
       (println "*** Sales Menu ***\n------------------\n1. Display Customer Table\n2. Display Product Table\n3. Display Sales Table\n4. Total Sales for Customer\n5. Total Count for Product\n6. Exit\nEnter an option?")
       (def choice (read-line))
+
       (if (= choice "1")
         (do
           (read_cust)
@@ -337,33 +339,43 @@
       (if (= choice "4")
         (do
           (println "Please enter a customer name: ")
+
           (def cust_name (read-line))
+          (print cust_name)
           ;Display purchases
           (if (search_cust cust_name)
             (do
-              (print cust_name)
               (print ": ")
               (print (format "%.2f" total))
               (println)
-              ))
+              )
+            (do (println ": 0.00$")
+                )
+
+            )
           )
         )
       (if (= choice "5")
+
         (do
           (println "Please enter an item: ")
           (def item (read-line))
-          (if (sale_count item)
+
+          (print item)
+          (sale_count item)
+          (if (= prod_exist true)
             (do
-              (sale_count item)
-              (println item)
               (print ": ")
               (println prod_bought)
+              (println)
 
-              ))
-          (sale_count item)
-          (println prod_bought)
+              )
+            (do
+              (println ": 0")
+              (println)
+              )
             )
-
+            )
         )
       (if (= choice "6")
         (do
